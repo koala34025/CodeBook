@@ -22,6 +22,9 @@ public:
 
     // Return the number of elements
     int size() const;
+    
+    // Print all elements
+    void print() const;
 private:
     T* _queue;
     int front_idx, back_idx; // initial value = 0
@@ -104,4 +107,14 @@ template<class T>
 int queue<T>::size() const
 {
     return _size;
+}
+
+template<class T>
+void queue<T>::print() const
+{
+    for(int i=(front_idx+1)%capacity; ; i=(i+1)%capacity){
+        cout << _queue[i];
+        if(i == back_idx)
+            break;
+    }
 }
