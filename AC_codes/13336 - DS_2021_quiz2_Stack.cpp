@@ -1,10 +1,11 @@
-// 5/6 WA with my own template
+// 6/6 change everything into ull
+// 5/6 WA n, m may exceed long long
 // 5/6 TLE with <stack>
 
 #include <iostream>
 #include <string.h>
 using namespace std;
-#define ll long long
+#define ll unsigned long long
 
 template<class T>
 class stack
@@ -135,7 +136,7 @@ bool operator >=(const pr<T1, T2> &lhs, const pr<T1, T2> &rhs)
 }
 
 const int mxL = 1e7+7;
-pr<int, int> sz[26];
+pr<ll, ll> sz[26];
 char op[mxL];
 
 int main()
@@ -148,7 +149,7 @@ int main()
 
     for(int i=0; i<t; i++){
         char c;
-        int n, m;
+        ll n, m;
         cin >> c >> n >> m;
         sz[c-'A'] = {n, m};
     }
@@ -164,16 +165,16 @@ int main()
         ll ans = 0;
         // fully parenthesize algorithm
         // take right parenthesize as *
-        stack<pr<int, int>> stk;
+        stack<pr<ll, ll>> stk;
 
         for(int j=0; j<len; j++){
             if(op[j] == '('){
                 continue;
             }
             else if(op[j] == ')'){
-                pr<int, int> p2 = stk.top();
+                pr<ll, ll> p2 = stk.top();
                 stk.pop();
-                pr<int, int> p1 = stk.top();
+                pr<ll, ll> p1 = stk.top();
                 stk.pop();
 
                 if(p1.second != p2.first){
@@ -185,12 +186,7 @@ int main()
                 stk.push({p1.first, p2.second});
             }
             else{ // alphabet
-                //if(!stk.empty() && stk.top().second != sz[op[j]-'A'].first){
-                    //ok = false;
-                    //break;
-                //}
                 stk.push(sz[op[j]-'A']);
-
             }
         }
 
