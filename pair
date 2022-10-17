@@ -1,5 +1,3 @@
-// Need to rename 'pair' into 'pr'
-
 template<class T1, class T2>
 struct pr {
     // Remove constructors just for brace-enclosed initializer
