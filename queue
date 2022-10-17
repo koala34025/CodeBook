@@ -24,7 +24,7 @@ public:
     int size() const;
 private:
     T* _queue;
-    int front_idx, back_idx; // initial value = -1
+    int front_idx, back_idx; // initial value = 0
     // (front_idx, back_idx]
     int capacity;
     int _size;
@@ -37,8 +37,8 @@ queue<T>::queue(int queueCapacity)
         throw "queueCapacity must be > 0.";
 
     _queue = new T[queueCapacity];
-    front_idx = -1;
-    back_idx = -1;
+    front_idx = 0;
+    back_idx = 0;
     capacity = queueCapacity;
     _size = 0;
 }
