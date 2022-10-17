@@ -1,5 +1,5 @@
 // 6/6 change everything into ull
-// 5/6 WA n, m may exceed long long
+// 5/6 WA n or m may exceed long long
 // 5/6 TLE with <stack>
 
 #include <iostream>
