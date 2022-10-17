@@ -1,0 +1,81 @@
+template<class T>
+class vector {
+public:
+    // Constructor
+    vector();
+
+    // Check if the vector is empty
+    bool empty() const;
+
+    // Return the element at the position(0 base)
+    T& operator[](int position) const;
+
+    // Insert a new element at back
+    void push_back(int element);
+
+    // Clear all the element
+    void clear(void);
+
+    // Return the number of elements
+    int size(void) const;
+private:
+    // Double the capacity
+    void resize(void);
+
+    int *data;
+    int capacity;
+    int _size;
+};
+
+template<class T>
+vector<T>::vector()
+{
+    capacity = 100;
+    _size = 0;
+    data = new T[capacity];
+}
+
+template<class T>
+bool vector<T>::empty() const
+{
+    return (_size == 0);
+}
+
+template<class T>
+T& vector<T>::operator[](int idx) const
+{
+    return data[idx];
+}
+
+template<class T>
+void vector<T>::push_back(int x)
+{
+    if(_size == capacity)
+        resize();
+
+    data[_size++] = x;
+}
+
+template<class T>
+void vector<T>::clear(void)
+{
+    _size = 0;
+}
+
+template<class T>
+int vector<T>::size(void) const
+{
+    return _size;
+}
+
+template<class T>
+void vector<T>::resize(void)
+{
+    capacity *= 2;
+    T* tmp = data;
+    data = new T[capacity];
+    for(int i=0; i<_size; i++){
+        data[i] = tmp[i];
+    }
+    //delete [] tmp;
+}
