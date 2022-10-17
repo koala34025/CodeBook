@@ -1,6 +1,8 @@
-// 5/6 WA or TLE
+// 5/6 WA with my own template
+// 5/6 TLE with <stack>
 
 #include <iostream>
+#include <string.h>
 using namespace std;
 #define ll long long
 
@@ -132,8 +134,9 @@ bool operator >=(const pr<T1, T2> &lhs, const pr<T1, T2> &rhs)
     return (!(lhs < rhs));
 }
 
+const int mxL = 1e7+7;
 pr<int, int> sz[26];
-string op;
+char op[mxL];
 
 int main()
 {
@@ -155,7 +158,7 @@ int main()
 
     for(int i=0; i<q; i++){
         cin >> op;
-        int len = op.size();
+        int len = strlen(op);
 
         bool ok = true;
         ll ans = 0;
@@ -196,5 +199,4 @@ int main()
         else
             cout << "error\n";
     }
-
 }
