@@ -226,7 +226,10 @@ stringstream ss;
 int main()
 {
     while(cin >> s){
+        ss.str("");
+        ss.clear();
         ss << s;
+
         Node* root = NULL;
         constructTree(&root, ss);
         int ans = 0;
