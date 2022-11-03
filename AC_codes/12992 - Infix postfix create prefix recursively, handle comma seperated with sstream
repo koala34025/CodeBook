@@ -1,0 +1,63 @@
+#include <iostream>
+#include <sstream>
+using namespace std;
+
+const int mxN = 1e5+5;
+int in[mxN];
+int post[mxN];
+int idx[mxN];
+string s;
+stringstream ss;
+
+void solve(int pl, int pr, int il, int ir)
+{
+    int root = post[pr];
+    cout << ',' << root;
+
+    int idx_root = idx[root];
+    int l_len = idx_root - il;
+    int r_len = ir - idx_root;
+
+    if(l_len > 0)
+        solve(pr-r_len-l_len, pr-r_len-1, il, idx_root-1);
+    if(r_len > 0)
+        solve(pr-r_len, pr-1, idx_root+1, ir);
+}
+
+int main()
+{
+    while(cin >> s){
+        ss.str("");
+        ss.clear();
+        ss << s;
+        int num;
+        char c;
+        int i = 0;
+        while(ss >> num){
+            ss >> c;
+            idx[num] = i;
+            in[i++] = num;
+        }
+        cin >> s;
+        ss.str("");
+        ss.clear();
+        ss << s;
+        i = 0;
+        while(ss >> num){
+            ss >> c;
+            post[i++] = num;
+        }
+
+        cout << post[i-1];
+        int idx_root = idx[post[i-1]];
+        int l_len = idx_root;
+        int r_len = i-1-idx_root;
+
+        if(l_len > 0)
+            solve(i-1-r_len-l_len, i-1-r_len-1, 0, idx_root-1);
+        if(r_len > 0)
+            solve(i-1-r_len, i-1-1, idx_root+1, i-1);
+
+        cout << '\n';
+    }
+}
