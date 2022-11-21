@@ -11,7 +11,7 @@ public:
     T& operator[](int position) const;
 
     // Insert a new element at back
-    void push_back(int element);
+    void push_back(T element);
 
     // Clear all the element
     void clear(void);
@@ -48,7 +48,7 @@ T& vector<T>::operator[](int idx) const
 }
 
 template<class T>
-void vector<T>::push_back(int x)
+void vector<T>::push_back(T x)
 {
     if(_size == capacity)
         resize();
