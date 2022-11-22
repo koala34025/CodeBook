@@ -1,0 +1,72 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define MAX 2005
+
+vector<pair<int, int>> edge[MAX];
+vector<pair<int, int>> bridge[MAX];
+ll dist1[MAX], dist2[MAX];
+int n, m;
+int S, E;
+
+int main()
+{
+    cin >> n >> S >> E >> m;
+
+    while(m--){
+        int a, b, c;
+        cin >> a >> b >> c;
+
+        edge[a].push_back( {b, c} );
+        edge[b].push_back( {a, c} );
+    }
+
+    cin >> m;
+
+    while(m--){
+        int a, b, c;
+        cin >> a >> b >> c;
+
+        bridge[a].push_back( {b, c} );
+        bridge[b].push_back( {a, c} );
+    }
+
+    memset(dist1, 0x3f, sizeof(dist1));
+    memset(dist2, 0x3f, sizeof(dist2));
+
+    priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>> pq;
+
+    dist1[S] = 0;
+    dist2[S] = 0;
+    pq.push( {0, S} );
+	
+    while(!pq.empty()){
+        auto [dis, now] = pq.top();
+        pq.pop();
+
+        int mxdist = max(dist1[now], dist2[now]);
+        if(dis > mxdist) continue;
+
+        int mndist = min(dist1[now], dist2[now]);
+
+        for(auto [neighbor, weight] : edge[now]){
+            if(dist1[neighbor] > dist1[now] + weight){
+                dist1[neighbor] = dist1[now] + weight;
+                pq.push( {dist1[neighbor], neighbor} );
+            }
+            if(dist2[neighbor] > mndist + weight){
+                dist2[neighbor] = mndist + weight;
+                pq.push( {dist2[neighbor], neighbor} );
+            }
+        }
+
+        for(auto [neighbor, weight] : bridge[now]){
+            if(dist2[neighbor] > dist1[now] + weight){
+                dist2[neighbor] = dist1[now] + weight;
+                pq.push( {dist2[neighbor], neighbor} );
+            }
+        }
+    }
+
+    cout << dist2[E] << '\n';
+}
