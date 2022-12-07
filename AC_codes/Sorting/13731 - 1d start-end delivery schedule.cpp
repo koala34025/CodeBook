@@ -1,21 +1,26 @@
-// 4/6, runtime error
+// 5/6 map tle, helped by chirsyang
 
 #include <iostream>
 using namespace std;
 #define ll long long
-#include <vector>
+#include <map>
 
-const int mxN = 2e6;
+const int mxN = 5e5+5;
 int n, m;
-vector<ll> ri(mxN);
-vector<ll> le(mxN);
+map<int, ll> ri;
+map<int, ll> le;
 
 int main()
 {
     cin >> n >> m;
+    le[m] = ri[m] = le[0] = ri[0] = 0;
     for(int i=0; i<n; i++){
-        ll s, e;
+        int s, e;
         cin >> s >> e;
+        if (!ri.count(s)) ri[s] = 0;
+        if (!ri.count(e)) ri[e] = 0;
+        if (!le.count(s)) le[s] = 0;
+        if (!le.count(e)) le[e] = 0;
         if(s < e){
             ri[s] += 1;
             ri[e] -= 1;
@@ -26,32 +31,25 @@ int main()
         }
     }
 
-    // ri[i] = num of toward paths between i, i+1
-    for(int i=1; i<m; i++){
-        ri[i] += ri[i-1];
+    int prev = 0;
+    for(auto it = ri.begin(); it != ri.end(); it++){
+        it->second += prev;
+        prev = it->second;
     }
-    // le[i] = num of backward paths between i-1, i
-    for(int i=m-1; i>0; i--){
-        le[i] += le[i+1];
+    prev = 0;
+    for(auto it = le.rbegin(); it != le.rend(); it++){
+        it->second += prev;
+        prev = it->second;
     }
-    // left shift le[]
-    // So, le[i] = num of backward paths between i, i+1
-    for(int i=0; i<m ;i++){
-        le[i] = le[i+1];
-    }
-
-    for(int i=0; i<m; i++){
-        if(ri[i] > le[i]){
-            le[i] = ri[i]-1;
-        }
-        else{
-            ri[i] = le[i]+1;
-        }
-    }
-
     ll ans = 0;
-    for(int i=0; i<m; i++){
-        ans += ri[i] + le[i];
+    for (auto i = ri.begin(); i != ri.end(); ++i) {
+        if (next(i) == ri.end()) break;
+        auto j = next(i);
+        ll r = ri[i->first], l = le[j->first];
+        if (l < r-1) l = r-1;
+        if (r < l+1) r = l+1;
+        ans += (j->first-i->first)*(l+r);
     }
     cout << ans << '\n';
+    return 0;
 }
