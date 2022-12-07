@@ -1,55 +1,74 @@
-// 5/6 map tle, helped by chirsyang
+// not enough memory for unique vectors
+// so just iterate and skip redundant pairs
+// focus on the last duplicated pair in ri 
+// and the first duplicated pair in le
+// helped by chrisyang >:I
 
 #include <iostream>
 using namespace std;
 #define ll long long
-#include <map>
+#include <vector>
+#include <algorithm>
 
 const int mxN = 5e5+5;
 int n, m;
-map<int, ll> ri;
-map<int, ll> le;
+vector<pair<int, ll>> ri;
+vector<pair<int, ll>> le;
 
 int main()
 {
     cin >> n >> m;
-    le[m] = ri[m] = le[0] = ri[0] = 0;
+    ri.push_back({0, 0});
+    ri.push_back({m, 0});
+    le.push_back({m, 0});
+    le.push_back({0, 0});
+
     for(int i=0; i<n; i++){
         int s, e;
         cin >> s >> e;
-        if (!ri.count(s)) ri[s] = 0;
-        if (!ri.count(e)) ri[e] = 0;
-        if (!le.count(s)) le[s] = 0;
-        if (!le.count(e)) le[e] = 0;
         if(s < e){
-            ri[s] += 1;
-            ri[e] -= 1;
+            ri.push_back({s, 1});
+            ri.push_back({e, -1});
+            le.push_back({s, 0});
+            le.push_back({e, 0});
         }
         else{
-            le[s] += 1;
-            le[e] -= 1;
+            le.push_back({s, 1});
+            le.push_back({e, -1});
+            ri.push_back({s, 0});
+            ri.push_back({e, 0});
         }
     }
 
-    int prev = 0;
-    for(auto it = ri.begin(); it != ri.end(); it++){
-        it->second += prev;
-        prev = it->second;
+    sort(ri.begin(), ri.end());
+    sort(le.begin(), le.end());
+
+    int len = ri.size();
+    for(int i=1; i<len; i++){
+        ri[i].second += ri[i-1].second;
     }
-    prev = 0;
-    for(auto it = le.rbegin(); it != le.rend(); it++){
-        it->second += prev;
-        prev = it->second;
+    for(int i=len-2; i>=0; i--){
+        le[i].second += le[i+1].second;
     }
+
     ll ans = 0;
-    for (auto i = ri.begin(); i != ri.end(); ++i) {
-        if (next(i) == ri.end()) break;
-        auto j = next(i);
-        ll r = ri[i->first], l = le[j->first];
-        if (l < r-1) l = r-1;
-        if (r < l+1) r = l+1;
-        ans += (j->first-i->first)*(l+r);
+    for(int i=0; i<len; i++){
+        while(i+1 != len && (ri[i+1].first == ri[i].first)){
+            i++;
+        }
+        if(i+1 == len) break;
+
+        ll right_cnt = ri[i].second;
+        ll left_cnt = le[i+1].second;
+
+        if(right_cnt > left_cnt){
+            left_cnt = right_cnt - 1;
+        }
+        else{
+            right_cnt = left_cnt + 1;
+        }
+
+        ans += (le[i+1].first - ri[i].first) * (right_cnt + left_cnt);
     }
     cout << ans << '\n';
-    return 0;
 }
